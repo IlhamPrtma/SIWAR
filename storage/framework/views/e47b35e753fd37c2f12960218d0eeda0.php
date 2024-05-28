@@ -1,11 +1,11 @@
+<?php $__env->startSection("content"); ?>
 <?php $__env->startPush("styles"); ?>
     <link href="<?php echo e(asset("admin/vendor/datatables/dataTables.bootstrap4.min.css")); ?>" rel="stylesheet">
 <?php $__env->stopPush(); ?>
-<?php $__env->startSection("content"); ?>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Menu</h6>
+            <h6 class="m-0 font-weight-bold text-black">Tabel Menu</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -24,7 +24,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex flex-row gap-3">
-                                        <img src="<?php echo e(asset("/storage/" . $menu->gambar)); ?>" alt="Menu Image" style="max-width: 75px;">
+                                        <img src="<?php echo e(asset("/storage/" . $menu->gambar)); ?>" alt="Menu Image" style="width: 75px; height: 50px" class="flex-shrink-0">
                                         <p>
                                             <?php echo e($menu->nama); ?>
 
@@ -120,6 +120,19 @@
 
     <!-- Page level custom scripts -->
     <script src="<?php echo e(asset("admin/js/demo/datatables-demo.js")); ?>"></script>
+    <script>
+        // Script untuk mengendalikan sidebar
+        $(document).ready(function() {
+            $('#sidebarToggleTop').on('click', function() {
+                $('body').toggleClass('sidebar-toggled');
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar .collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
+    
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make("layouts.admin", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\order-food-app-main\resources\views/admin/menu.blade.php ENDPATH**/ ?>

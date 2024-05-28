@@ -1,12 +1,12 @@
 @extends("layouts.admin")
+@section("content")
 @push("styles")
     <link href="{{ asset("admin/vendor/datatables/dataTables.bootstrap4.min.css") }}" rel="stylesheet">
 @endpush
-@section("content")
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Menu</h6>
+            <h6 class="m-0 font-weight-bold text-black">Tabel Menu</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -25,7 +25,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex flex-row gap-3">
-                                        <img src="{{ asset("/storage/" . $menu->gambar) }}" alt="Menu Image" style="max-width: 75px;">
+                                        <img src="{{ asset("/storage/" . $menu->gambar) }}" alt="Menu Image" style="width: 75px; height: 50px" class="flex-shrink-0">
                                         <p>
                                             {{ $menu->nama }}
                                         </p>
@@ -120,4 +120,17 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ asset("admin/js/demo/datatables-demo.js") }}"></script>
+    <script>
+        // Script untuk mengendalikan sidebar
+        $(document).ready(function() {
+            $('#sidebarToggleTop').on('click', function() {
+                $('body').toggleClass('sidebar-toggled');
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar .collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
+    
 @endpush

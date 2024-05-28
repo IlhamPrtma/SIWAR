@@ -33,6 +33,7 @@
 }
 
 
+
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -99,6 +100,7 @@
     font-weight: 500;
     outline: none;
     transition: .5s;
+    
 }
 
 .sticky-top.navbar-dark .navbar-nav .nav-link {
@@ -163,6 +165,7 @@
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+    /* margin-top: 75px; */
 }
 
 .hero-header img {

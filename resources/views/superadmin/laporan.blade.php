@@ -4,30 +4,34 @@
 
 @endpush
 @section('content')
+<div class="align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800" style="font-weight: bold">Halaman Laporan</h1>
+    <p>Pengelolaan Data Penjualan, memungkinkan untuk memantau dan mencetak laporan penjualan</p>
+</div>
      <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Laporan</h6>
+            <h6 class="m-0 font-weight-bold text-black">Laporan</h6>
         </div>
         <div class="card-body">
-            <div class="my-3">
-                <form action="{{route('superadmin.print.laporan')}}" method="POST">
-                    @csrf
-                    <div class="d-flex justify-content-between mb-3"> 
-                        <div class="flex-fill me-2"> 
-                            <label for="start_date" class="form-label">Tanggal Awal</label>
-                            <input type="date" class="form-control"  id="start_date" name="start_date" placeholder="name@example.com" required>
-                        </div>
-                        <div class="flex-fill ms-2"> 
-                            <label for="end_date" class="form-label">Tanggal Akhir</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" placeholder="name@example.com" required>
-                        </div>
-                    </div>                
-                    <button type="submit" class="btn btn-primary text-orange-500" style="background-color: black">
-                        <span>Print</span>
-                    </button>
-                </form>
-
+        <div class="my-3">
+    <form action="{{route('superadmin.print.laporan')}}" method="POST">
+        @csrf
+        <div class="d-flex flex-column flex-md-row justify-content-between mb-3"> 
+            <div class="flex-fill mb-2 mb-md-0 me-md-2"> 
+                <label for="start_date" class="form-label">Tanggal Awal</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" placeholder="name@example.com" required>
             </div>
+            <div class="flex-fill ms-md-2"> 
+                <label for="end_date" class="form-label">Tanggal Akhir</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" placeholder="name@example.com" required>
+            </div>
+        </div>                
+        <button type="submit" class="btn btn-primary text-orange-500" style="background-color: black">
+            <span>Print</span>
+        </button>
+    </form>
+</div>
+
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -76,4 +80,16 @@
 <script src="{{asset('admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
 <script src="{{asset('admin/js/demo/datatables-demo.js')}}"></script>
+<script>
+        // Script untuk mengendalikan sidebar
+        $(document).ready(function() {
+            $('#sidebarToggleTop').on('click', function() {
+                $('body').toggleClass('sidebar-toggled');
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar .collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
 @endpush

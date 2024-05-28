@@ -1,9 +1,8 @@
-                            
 <?php $__env->startSection("content"); ?>
 <?php if (\Illuminate\Support\Facades\Blade::check('hasanyrole', 'admin')): ?>
     <div class="text-start">
         <div class="row">
-            <div class="col-4">
+            <div class="col-md-4">
                 <div class="d-flex flex-row">
                     <div class="card text-white h-50 mr-3" style="width: 15rem; background-color: #FF8F0B">
                         <div class="card-body">
@@ -27,7 +26,7 @@
                     </div>
                     <div class="card text-white h-50 mr-3" style="width: 15rem; background-color: #FF8F0B">
                         <div class="card-body">
-                            <svg class="my-3" width="30" height="30" viewBox="0 0 30 30" fill="none"
+                            <svg class="my-3" width="35" height="35" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_751_245)">
                                     <path
@@ -49,7 +48,7 @@
                                     </clipPath>
                                 </defs>
                             </svg>
-                            <h5 class="card-title font-weight-bold text-wrap" style="width: 6rem">Total Menu</h5>
+                            <h5 class="card-title font-weight-bold text-wrap" >Total Menu</h5>
                             <p class="card-text" style="font-size: 24px"><?php echo e(count($menus)); ?></p>
                         </div>
                     </div>
@@ -82,98 +81,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-md-8">
 
                 <a href="<?php echo e(route('pelanggan.menu')); ?>" class="btn btn btn-primary text-orange-500 rounded-pill px-3" style="background-color: black">
                     <img src="<?php echo e(asset("svg/plus.svg")); ?>" class="mr-3">
                     <span>Tambah Pesanan</span>
                 </a>
 
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Pesanan</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="POST" action="<?php echo e(route('admin.add.pesanan')); ?>">
-                                    <?php echo csrf_field(); ?>  
-                                    <div class="mb-3">
-                                      <label for="nama_pemesan" class="form-label">Nama Pelanggan</label>
-                                      <input type="text" class="form-control" name="nama_pemesan">
-                                    </div>
-                                    <div class="mb-3">
-                                      <label for="nomor_phone" class="form-label">Nomor Telp Pelanggan</label>
-                                      <input type="number" class="form-control" name="nomor_phone"  
-                                        minlength="10" maxlength="12" pattern="^08[0-9]{8,10}$" required>
-                                    </div>
-                                    <div class="mb-3">
-                                      <label for="no_meja" class="form-label">No Meja</label>
-                                      <input type="number" class="form-control" name="no_meja" min = "1">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="makanan-select" class="form-label">Makanan</label>
-                                        <div class="row">
-                                          <div class="col-6">
-                                            <select name="makanan-select" class="form-select">
-                                              <option selected>Pilih makanan</option>
-                                              <?php $__currentLoopData = $makanans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $makanan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($makanan->id); ?>"><?php echo e($makanan->nama); ?></option>
-                                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                          </div>
-                                      
-                                          <div class="col-6">
-                                            <input type="number" min="1" class="form-control" name="makanan_quantity" placeholder="Quantity">
-                                          </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="minuman-select" class="form-label">Minuman</label>
-                                        <div class="row">
-                                          <div class="col-6">
-                                            <select name="minuman-select" class="form-select">
-                                              <option selected>Pilih minuman</option>
-                                              <?php $__currentLoopData = $minumans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $minuman): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($minuman->id); ?>"><?php echo e($minuman->nama); ?></option>
-                                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                          </div>
-                                      
-                                          <div class="col-6">
-                                            <input type="number" min="1" class="form-control" name="minuman_quantity" placeholder="Quantity">
-                                          </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="camilan-select" class="form-label">Camilan</label>
-                                        <div class="row">
-                                          <div class="col-6">
-                                            <select name="camilan-select" class="form-select">
-                                              <option selected>Pilih camilan</option>
-                                              <?php $__currentLoopData = $camilans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $camilan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($camilan->id); ?>"><?php echo e($camilan->nama); ?></option>
-                                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-                                          </div>
-                                      
-                                          <div class="col-6">
-                                            <input type="number" min="1" class="form-control" name="camilan_quantity" placeholder="Quantity">
-                                          </div>
-                                        </div>
-                                    </div>                                    
-                                    <button type="submit" class="btn btn-success">Tambah</button>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead style="color: white; background-color: #FF8F0B">
@@ -194,7 +108,7 @@
                                 <td><?php echo e($pesanan->menu->nama); ?></td>
                                 <td><?php echo e($pesanan->kuantitas); ?></td>
                                 <td><?php echo e($pesanan->menu->category->nama); ?></td>
-                                <td style="font-size: 14px"><?php echo e(\Carbon\Carbon::parse($pesanan->created_at)->isoFormat('D MMMM YYYY HH:mm').' WIB'); ?></td>
+                                <td style="font-size: 14px"><?php echo e(\Carbon\Carbon::parse($pesanan->created_at)->addHours(7)->isoFormat('D MMMM YYYY HH:mm').' WIB'); ?></td>
                                 <td>
                                     <h5>
                                         <span class="badge text-white bg-<?php echo e($pesanan->pesanan->status == 'proses' ? 'warning' : ($pesanan->pesanan->status == 'sukses' ? 'success' : 'danger')); ?>"><?php echo e(Str::of($pesanan->pesanan->status)->apa()); ?></span>
@@ -335,10 +249,11 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Ringkasan Pesanan</h6>
+                <h6 class="m-0 font-weight-bold text-gray-900">Ringkasan Pesanan</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
+            <p class="m-0"> Performa pesanan berdasarkan berbagai kategori  </p>
                 <div class="d-flex flex-row justify-content-center align-items-center" style="height: 100%;">
                     <div class="pt-4 ">
                         <canvas id="mostMenuOrderPieChart"></canvas>
@@ -361,7 +276,7 @@
         <div class="card shadow mb-4">
              <!-- Card Header - Dropdown -->
              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Menu Rekomendasi</h6>
+                <h6 class="m-0 font-weight-bold text-gray-900">Menu Rekomendasi</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body shadow animated--grow-in p-3" aria-labelledby="alertsDropdown">
@@ -369,14 +284,14 @@
                     
                 <a class="d-flex align-items-center mb-4">
                     <div class="mr-3">
-                        <div class="icon-circle text-white bg-success">
+                        <div class="icon-circle text-white" style="background-color:orange">
                             <?php echo e($loop->iteration); ?>
 
                         </div>
                     </div>
                     <div>
                         <div class="small text-gray-500"><?php echo e($recom->jumlah); ?> Pesanan</div>
-                        <span class="font-weight-bold"><?php echo e($recom->menu->nama); ?></span>
+                        <span class="font-weight-bold text-gray-900"><?php echo e($recom->menu->nama); ?></span>
                     </div>
                 </a>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

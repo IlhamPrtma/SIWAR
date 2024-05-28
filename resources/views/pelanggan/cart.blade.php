@@ -105,7 +105,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex flex-row justify-content-between">
-                        <p>Tanggal: {{date('l, d F Y h:i:s');}}</p>
+                        <p>Tanggal: {{ date('l, d F Y h:i:s', strtotime('+7 hours')) }}</p>
                         <p>No Meja: {{$no_meja}} </p>
                     </div>
                     <table class="table">

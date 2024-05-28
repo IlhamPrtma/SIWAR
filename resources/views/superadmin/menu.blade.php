@@ -4,9 +4,13 @@
 @endpush
 @section("content")
     <!-- DataTales Example -->
+    <div class="align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800" style="font-weight: bold">Halaman Menu</h1>
+    <p>Pengelolaan Daftar Menu, memungkinkan untuk menambah, mengedit, dan menghapus item menu</p>
+</div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Menu</h6>
+            <h6 class="m-0 font-weight-bold text-black">Tabel Menu</h6>
         </div>
         <div class="card-body">
             <div class="my-3">
@@ -103,7 +107,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex flex-row gap-3">
-                                        <img src="{{ asset("/storage/" . $menu->gambar) }}" alt="Menu Image" style="max-width: 75px;">
+                                        <img src="{{ asset("/storage/" . $menu->gambar) }}" alt="Menu Image" style="width: 75px; height: 50px" class="flex-shrink-0">
                                         <p>
                                             {{ $menu->nama }}
                                         </p>
@@ -280,5 +284,17 @@
                 }
             });
         }
+    </script>
+    <script>
+        // Script untuk mengendalikan sidebar
+        $(document).ready(function() {
+            $('#sidebarToggleTop').on('click', function() {
+                $('body').toggleClass('sidebar-toggled');
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar .collapse').collapse('hide');
+                }
+            });
+        });
     </script>
 @endpush

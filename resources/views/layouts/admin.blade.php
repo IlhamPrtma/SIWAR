@@ -2,20 +2,18 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Warmindo Aroma | {{(Auth::user()->roles == 'admin') ? 'Karyawan' : 'Pemilik'}}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="{{asset('admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
+    <title>Warmindo Aroma | {{ (Auth::user() && Auth::user()->roles == 'admin') ? 'Karyawan' : 'Pemilik' }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <link href="{{asset('admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
-    <link href="{{asset('admin/css/custom.css')}}" rel="stylesheet">
+    <link href="{{ asset('admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/custom.css') }}" rel="stylesheet">
     @stack('styles')
-
 </head>
 
 <body id="page-top">
@@ -25,10 +23,10 @@
             <div id="content">
                 <nav class="navbar navbar-expand navbar-light topbar static-top shadow" style="background-color: black">
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
+                        <i class="fa fa-bars" style ="color:white"></i>
                     </button>
                     <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <h1>Warmindo Aroma</h1>
+                        <h1 class="titleNav">Warmindo Aroma</h1>
                     </div>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown no-arrow">
@@ -54,7 +52,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Warmindo Aroma</span>
+                        <span>Copyright &copy; RIB Team</span>
                     </div>
                 </div>
             </footer>
@@ -72,7 +70,7 @@
     <script src="{{asset('admin/js/demo/chart-pie-demo.js')}}"></script>
     <script src="{{asset('admin/js/demo/chart-bar-demo.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     @stack('scripts')
 </body>
 </html>

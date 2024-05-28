@@ -1,3 +1,4 @@
+<?php $__env->startSection("content"); ?>
 <?php $__env->startPush("styles"); ?>
     <link href="<?php echo e(asset("admin/vendor/datatables/dataTables.bootstrap4.min.css")); ?>" rel="stylesheet">
 <?php $__env->stopPush(); ?>
@@ -5,27 +6,27 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Pesanan</h6>
+            <h6 class="m-0 font-weight-bold text-black">Pesanan</h6>
         </div>
         
         <div class="card-body">
             <div class="d-flex justify-content-between">
-                    <div class="">
-                        <a href="<?php echo e(route('pelanggan.menu')); ?>" class="btn btn btn-primary text-orange-500 rounded-pill px-3" style="background-color: black">
-                            <img src="<?php echo e(asset("svg/plus.svg")); ?>" class="mr-3">
-                            <span>Tambah Pesanan</span>
-                        </a>
-                    </div>
-                    <div>
-                        <label for="filterStatus">Filter Status</label>
-                        <select id="filterStatus" class="form-select mb-3">
-                            <option value="">Semua</option>
-                            <option value="proses">Proses</option>
-                            <option value="sukses">Sukses</option>
-                            <option value="batal">Batal</option>
-                        </select>
-                    </div>
-                </div>    
+                <div class="md-8">
+                    <a href="<?php echo e(route('pelanggan.menu')); ?>" class="btn btn btn-primary text-orange-500 rounded-pill px-3" style="background-color: black">
+                        <img src="<?php echo e(asset("svg/plus.svg")); ?>" class="mr-3">
+                        <span>Tambah</span>
+                    </a>
+                </div>
+                <div class="md-8">
+                    <label for="filterStatus">Filter Status</label>
+                    <select id="filterStatus" class="form-select mb-3">
+                        <option value="">Semua</option>
+                        <option value="proses">Proses</option>
+                        <option value="sukses">Sukses</option>
+                        <option value="batal">Batal</option>
+                    </select>
+                </div>
+            </div>    
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -34,6 +35,7 @@
                             <th>Daftar Pesanan</th>
                             <th>Nama Pemesan</th>
                             <th>Nomor Telp. Pemesan</th>
+                            <th>Tanggal Pemesanan</th>
                             <th>Total </th>
                             <th>Status</th>
                             <th>Action</th>
@@ -50,6 +52,7 @@
                                 </td>
                                 <td><?php echo e($pesanan->nama_pemesan); ?></td>
                                 <td><?php echo e($pesanan->nomor_phone); ?></td>
+                                <td style="font-size: 14px"><?php echo e(\Carbon\Carbon::parse($pesanan->created_at)->addHours(7)->isoFormat('D MMMM YYYY HH:mm').' WIB'); ?></td>
                                 <td><?php echo e("Rp " . number_format($pesanan->total_harga, 0, ".", ".")); ?></td>
                                 <td>
                                     <h5>
@@ -128,13 +131,26 @@
             $('#filterStatus').on('change', function () {
                 var selectedCategory = $(this).val(); // Ambil nilai dari select
                 if (selectedCategory === '') {
-                    table.column(5).search('').draw(); // Jika "Semua" dipilih, reset filter
+                    table.column(6).search('').draw(); // Jika "Semua" dipilih, reset filter
                 } else {
-                    table.column(5).search(selectedCategory).draw(); // Terapkan filter
+                    table.column(6).search(selectedCategory).draw(); // Terapkan filter
                 }
             });
         });
     </script>
+    <script>
+        // Script untuk mengendalikan sidebar
+        $(document).ready(function() {
+            $('#sidebarToggleTop').on('click', function() {
+                $('body').toggleClass('sidebar-toggled');
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar .collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
+    
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make("layouts.admin", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\order-food-app-main\resources\views/admin/pesanan.blade.php ENDPATH**/ ?>
