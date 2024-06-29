@@ -10,6 +10,9 @@
     <meta name="author" content="">
 
     <title>Warmindo Aroma - Login</title>
+    
+    <!--Icon-->
+    <link href="{{ asset('storage/icon.png') }}" rel="icon">
 
     <!-- Custom fonts for this template-->
     <link href="admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

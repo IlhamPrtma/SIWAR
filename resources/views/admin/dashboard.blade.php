@@ -111,7 +111,9 @@
                                 <td style="font-size: 14px">{{\Carbon\Carbon::parse($pesanan->created_at)->addHours(7)->isoFormat('D MMMM YYYY HH:mm').' WIB'}}</td>
                                 <td>
                                     <h5>
-                                        <span class="badge text-white bg-{{$pesanan->pesanan->status == 'proses' ? 'warning' : ($pesanan->pesanan->status == 'sukses' ? 'success' : 'danger')}}">{{ Str::of($pesanan->pesanan->status)->apa()}}</span>
+                                        <span class="badge text-white bg-{{ $pesanan->pesanan->status == 'proses' ? 'warning' : ($pesanan->pesanan->status == 'sukses' ? 'success' : 'danger') }}">
+                                            {{ $pesanan->pesanan->status == 'batal' ? 'Belum Bayar' : Str::of($pesanan->pesanan->status)->apa() }}
+                                        </span>
                                     </h5>
                                 </td>
                             </tr>
@@ -233,6 +235,8 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                <div class="mt-0">
+                </div>
                 <div class="chart-area">
                     <canvas id="mapPelangganChart"></canvas>
                 </div>
@@ -334,15 +338,15 @@
     @endphp
     <script>
 
-        // Inisialisasi Chart.js
+
         const ctx2 = document.getElementById('myAreaChart2').getContext('2d');
         let myLineChart2 = new Chart(ctx2, {
             type: 'line',
             data: {
-                labels: JSON.parse('<?= json_encode($months)?>'),
+                labels: <?= json_encode($months) ?>,
                 datasets: [{
                     label: 'Revenue',
-                    data: JSON.parse('<?= json_encode($profits)?>'), 
+                    data: <?= json_encode($profits) ?>,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
                     fill: false
@@ -350,8 +354,25 @@
             },
             options: {
                 scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Pendapatan (Rupiah)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString(); // Format angka ke format Rupiah
+                            }
+                        }
                     }
                 }
             }
@@ -359,22 +380,38 @@
 
 
         const ctx2MapPelanggan = document.getElementById('mapPelangganChart').getContext('2d');
-        let myLineChartMapPelanggan = new Chart(ctx2MapPelanggan, {
+        let myBarChartMapPelanggan = new Chart(ctx2MapPelanggan, {
             type: 'bar',
             data: {
-                labels: JSON.parse('<?= json_encode($months)?>'),
+                labels: <?= json_encode($months) ?>,
                 datasets: [{
                     label: 'Map Pelanggan',
-                    data: JSON.parse('<?= json_encode($pelanggansd)?>'), 
+                    data: <?= json_encode($pelanggansd) ?>,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)', // Warna latar belakang batang grafik
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
-                    fill: false
                 }]
             },
             options: {
+                indexAxis: 'x', // Mengatur sumbu x menjadi sumbu y (menyesuaikan dari yang sebelumnya adalah sumbu x)
                 scales: {
+                    x: {
+                        beginAtZero: true,
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        },
+                        ticks: {
+                            stepSize: 1 // Mengatur langkah nilai di sumbu x
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Pelanggan'
+                        }
                     }
                 }
             }

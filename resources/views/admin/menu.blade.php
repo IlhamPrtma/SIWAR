@@ -42,53 +42,62 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center flex-row align-items-center">
-                                        <button type="button" type="button" class="btn btn-success" data-bs-toggle="modal"
+                                        <button type="button" class="btn btn-success mr-3" data-bs-toggle="modal"
                                             data-bs-target="#editMenuModal{{ $menu->id }}">Edit</button>
                                         <div class="modal fade" id="editMenuModal{{ $menu->id }}" tabindex="-1"
                                             aria-labelledby="editMenuModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="editMenuModalLabel">Edit Menu
-                                                        </h1>
+                                                        <h1 class="modal-title fs-5" id="editMenuModalLabel">Edit Menu</h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="post" action="{{route('admin.update.menu', ['id_menu' => $menu->id])}}">
-                                                            @method('put')
+                                                        <form method="post"
+                                                            action="{{ route("admin.update.menu", ["id_menu" => $menu->id]) }}"
+                                                            enctype="multipart/form-data">
+                                                            @method("put")
                                                             @csrf
                                                             <div class="mb-3">
-                                                              <label for="nama" class="form-label">Nama Menu</label>
-                                                              <input type="text" class="form-control" name="nama" value="{{$menu->nama}}">
+                                                                <label for="nama" class="form-label">Nama Menu</label>
+                                                                <input type="text" class="form-control" name="nama"
+                                                                    value="{{ $menu->nama }}">
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="gambar" class="form-label">Gambar</label>
-                                                                <input class="form-control" type="file" id="gambar">
-                                                              </div>
-                                                            <div class="mb-3">
-                                                              <label for="harga" class="form-label">Harga</label>
-                                                              <input type="number" class="form-control" name="harga" value="{{$menu->harga}}">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                              <label for="ketersediaan" class="form-label">Ketersediaan</label>
-                                                              <select class="form-select" name="ketersediaan" aria-label="Default select example">
-                                                                @foreach ([['code' => 1,'status'=>"Tersedia"],['code' => 0,'status'=>"Kosong"]] as $ketersediaan)
-                                                                <option value="{{$ketersediaan['code']}}" @if ($ketersediaan['code'] === $menu->ketersediaan) selected @endif >{{$ketersediaan['status']}}</option>
-                                                                @endforeach
-                                                              </select>
+                                                                <input class="form-control" type="file" id="gambar"
+                                                                    name="gambar">
+                                                                @if ($menu->gambar)
+                                                                    <p>Gambar saat ini:</p>
+                                                                    <img src="{{ asset("/storage/" . $menu->gambar) }}"
+                                                                        alt="Menu Image" style="max-width: 100px;">
+                                                                @endif
                                                             </div>
                                                             
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger"
+                                                            <div class="mb-3">
+                                                                <label for="ketersediaan"
+                                                                    class="form-label">Ketersediaan</label>
+                                                                <select class="form-select" name="ketersediaan"
+                                                                    aria-label="Default select example">
+                                                                    <option value="1"
+                                                                        {{ $menu->ketersediaan == 1 ? "selected" : "" }}>
+                                                                        Tersedia</option>
+                                                                    <option value="0"
+                                                                        {{ $menu->ketersediaan == 0 ? "selected" : "" }}>
+                                                                        Kosong</option>
+                                                                </select>
+                                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
                                                             data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-success">Perbarui data</button>
-                                                        </div>
+                                                        <button type="submit" class="btn btn-success">Perbarui
+                                                            data</button>
+                                                    </div>
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -132,5 +141,17 @@
             });
         });
     </script>
+    @if (session()->has("update-menu-successfully"))
+        @php
+            $message = session()->get("update-menu-successfully"); // Mengambil pesan dari sesi
+        @endphp
+        <script>
+            Swal.fire({
+                title: "Kelola Menu Sukses!",
+                text: "{{ addslashes($message) }}",
+                icon: "success"
+            });
+        </script>
+    @endif
     
 @endpush

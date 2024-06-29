@@ -42,12 +42,19 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+                            <!-- <?php if(session('menu-exists')): ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?php echo e(session('menu-exists')); ?>
+
+                                </div>
+                            <?php endif; ?> -->
                                 <form method="post" action="<?php echo e(route("superadmin.add.menu")); ?>"
                                     enctype="multipart/form-data">
                                     <?php echo csrf_field(); ?>
                                     <div class="mb-3">
                                         <label for="nama" class="form-label">Nama Menu</label>
                                         <input type="text" class="form-control" name="nama" required>
+                                        
                                     </div>
                                     <div class="mb-3">
                                         <label for="kategori" class="form-label">Kategori</label>

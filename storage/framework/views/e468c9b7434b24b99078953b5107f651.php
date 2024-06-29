@@ -21,9 +21,10 @@
                     <label for="filterStatus">Filter Status</label>
                     <select id="filterStatus" class="form-select mb-3">
                         <option value="">Semua</option>
+                        <option value="Belum Bayar">Belum Bayar</option>
                         <option value="proses">Proses</option>
                         <option value="sukses">Sukses</option>
-                        <option value="batal">Batal</option>
+                        
                     </select>
                 </div>
             </div>    
@@ -56,8 +57,12 @@
                                 <td><?php echo e("Rp " . number_format($pesanan->total_harga, 0, ".", ".")); ?></td>
                                 <td>
                                     <h5>
-                                        <span class="badge text-white bg-<?php echo e($pesanan->status == 'proses' ? 'warning' : ($pesanan->status == 'sukses' ? 'success' : 'danger')); ?>"><?php echo e(Str::of($pesanan->status)->apa()); ?></span>
+                                        <span class="badge text-white bg-<?php echo e($pesanan->status == 'proses' ? 'warning' : ($pesanan->status == 'sukses' ? 'success' : 'danger')); ?>">
+                                            <?php echo e($pesanan->status == 'batal' ? 'Belum Bayar' : Str::of($pesanan->status)->apa()); ?>
+
+                                        </span>
                                     </h5>
+
                                 </td>
                                 <td>
                                     <div class="d-flex flex-row gap-3 justify-items-center align-content-center justify-content-center">
@@ -77,14 +82,17 @@
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label for="nama_pemesan" class="form-label">Nama Pemesan|Meja</label>
-                                                                <input type="text" class="form-control" id="nama_pemesan" name="nama_pemesan" value="<?php echo e($pesanan->nama_pemesan.' ( Meja No.'.$pesanan->no_meja.' )'); ?>" required>
+                                                                <input type="text" class="form-control" id="nama_pemesan" name="nama_pemesan" value="<?php echo e($pesanan->nama_pemesan.' ( Meja No.'.$pesanan->no_meja.' )'); ?>" readonly>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="status" class="form-label">Status Pesanan</label>
                                                                 <select class="form-select" aria-label="Default select example" name="status" required>
-                                                                    <option selected>Open this select menu</option>
-                                                                    <?php $__currentLoopData = ['proses','batal','sukses']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                    <option value="<?php echo e($status); ?>" <?php if($pesanan->status === $status): ?> selected <?php endif; ?> ><?php echo e(Str::of($status)->apa()); ?></option>
+                                                                    <?php $__currentLoopData = [ 'batal', 'proses', 'sukses']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                        <?php if($status === 'batal'): ?>
+                                                                            <option value="<?php echo e($status); ?>" <?php if($pesanan->status === $status): ?> selected <?php endif; ?>>Belum Bayar</option>
+                                                                        <?php else: ?>
+                                                                            <option value="<?php echo e($status); ?>" <?php if($pesanan->status === $status): ?> selected <?php endif; ?>><?php echo e(Str::of($status)->apa()); ?></option>
+                                                                        <?php endif; ?>
                                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                 </select>
                                                             </div>
@@ -98,7 +106,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <form id="delete_pesanan_<?php echo e($pesanan->id); ?>"
+                                            action="<?php echo e(route('admin.delete.pesanan', ['id' => $pesanan->id])); ?>"
+                                            method="POST">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
+                                            <button type="button" onclick="showAlert(<?php echo e($pesanan->id); ?>, '<?php echo e($pesanan->nama_pemesan); ?>')" class="btn btn-danger">Hapus</button>
+                                        </form>
+
                                     </div>
+
+
                                 </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -124,6 +142,18 @@
     <script src="<?php echo e(asset("admin/vendor/datatables/dataTables.bootstrap4.min.js")); ?>"></script>
     <!-- Page level custom scripts -->
     <script src="<?php echo e(asset("admin/js/demo/datatables-demo.js")); ?>"></script>
+    <?php if(session()->has("delete-pesanan-successfully")): ?>
+        <?php
+            $message = session()->get("delete-pesanan-successfully"); // Mengambil pesan dari sesi
+        ?>
+        <script>
+            Swal.fire({
+                title: "Kelola Pesanan Sukses!",
+                text: "<?php echo e(addslashes($message)); ?>",
+                icon: "success"
+            });
+        </script>
+    <?php endif; ?>
     <script>
         $(document).ready(function () {
             var table = $('#dataTable').DataTable(); // Inisialisasi DataTable
@@ -138,6 +168,24 @@
             });
         });
     </script>
+    <script>
+        function showAlert(id, namaPemesan) {
+            Swal.fire({
+                title: `Anda yakin ingin menghapus pesanan ${namaPemesan}?`,
+                text: "Data yang dihapus tidak bisa dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText: "Batal",
+                confirmButtonText: "Ya, hapus",
+                dangerMode: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete_pesanan_${id}`).submit();
+                }
+            });
+        }
+    </script>
+
     <script>
         // Script untuk mengendalikan sidebar
         $(document).ready(function() {

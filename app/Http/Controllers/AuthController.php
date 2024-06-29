@@ -63,8 +63,7 @@ class AuthController extends Controller
         }
     }
 
-    public function dashboard()
-    {
+    public function dashboard(){
         $menus = Menu::all();
         $makanans = Menu::where('id_kategori', 1)
                 ->where('ketersediaan', '>', 0)
@@ -78,12 +77,19 @@ class AuthController extends Controller
         $user = Auth::user(); // Mengambil informasi pengguna saat ini
     
         if ($user->hasRole('admin')) {
-            $pesanans = Pesanan::whereIn('status', ['sukses', 'proses'])->get();
-        } 
-        elseif ($user->hasRole('super admin')) {
-            $pesanans = Pesanan::where('status', 'sukses')->get();
+            $pesanans = Pesanan::whereIn('status', ['sukses', 'proses'])
+                            ->whereRaw('MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())')
+                            ->get();
+        } elseif ($user->hasRole('super admin')) {
+            $pesanans = Pesanan::where('status', 'sukses')
+                            ->whereRaw('MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())')
+                            ->get();
         }
-        $pelanggans = Pesanan::select('nama_pemesan')->where('status','sukses')->groupBy('nama_pemesan')->get();
+       $pelanggans = Pesanan::select('nama_pemesan')
+                    ->where('status', 'sukses')
+                    ->whereRaw('MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())')
+                    ->groupBy('nama_pemesan')
+                    ->get();
         $karyawans = User::role('admin')->get();
 
         $revenue_datas = Pesanan::selectRaw('SUM(total_harga) AS total_revenue, EXTRACT(YEAR FROM created_at) AS year, EXTRACT(WEEK FROM created_at) AS week')

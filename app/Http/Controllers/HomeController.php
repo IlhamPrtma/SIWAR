@@ -20,7 +20,11 @@ class HomeController extends Controller
 
     public function menu(){
         $cart = session()->get('cart', []);
-        $menus = Menu::where('ketersediaan', 1)->with('category')->get();
+        $menus = Menu::with('category')
+                ->orderBy('ketersediaan', 'desc') 
+                ->orderBy('id_kategori') // Urutkan berdasarkan ID kategori
+                ->orderBy('nama') // Kemudian urutkan berdasarkan nama menu (ascending)
+                ->get();
         $title = 'Menu';
         return view('pelanggan.menu', compact('menus','title'));
     }
@@ -44,7 +48,7 @@ class HomeController extends Controller
 
         $validatedData = $request->validate([
             'nama_menu' => 'required',
-            'kuantitas' => 'required|integer|min:1'
+            'kuantitas' => 'required|integer|min:1|max:10|',
         ]);
     
         $menu = Menu::find($menu_id);
@@ -54,22 +58,39 @@ class HomeController extends Controller
     
         $cart = session()->get('cart', []);
     
-        if(isset($cart[$menu_id])) {
-            $cart[$menu_id]['quantity'] += $validatedData['kuantitas']; // Tambah kuantitas
-            $cart[$menu_id]['total_price'] = $cart[$menu_id]['price'] * $cart[$menu_id]['quantity']; // Perbarui total harga
+        // Check if the item with the same name already exists in the cart
+        $existingItem = collect($cart)->first(function ($item) use ($validatedData) {
+            return $item['name'] === $validatedData['nama_menu'];
+        });
+    
+        if ($existingItem) {
+           
+            if ($existingItem['quantity'] + $validatedData['kuantitas'] > 10) {
+                session()->flash('add-cart-over', 'Pesanan menu dengan nama yang sama tidak dapat  lebih dari 10');
+                return redirect()->back();
+                
+            }
+    
+            
+            $cart[$existingItem['menu_id']]['quantity'] += $validatedData['kuantitas'];
+            $cart[$existingItem['menu_id']]['total_price'] = $cart[$existingItem['menu_id']]['price'] * $cart[$existingItem['menu_id']]['quantity'];
         } else {
+            // If the item does not exist in the cart, add it
             $cart[$menu_id] = [
+                'menu_id' => $menu_id,
                 'name' => $validatedData['nama_menu'],
                 'price' => $menu->harga,
                 'quantity' => $validatedData['kuantitas'],
                 'total_price' => $menu->harga * $validatedData['kuantitas'], 
             ];
         }
+    
         session()->put('cart', $cart);
         session()->flash('add-cart-successfully', 'Item berhasil ditambahkan ke keranjang');
     
         return redirect()->back();
     }
+
 
     public function removeItem($order_id) {
         $cart = session()->get('cart', []);
@@ -99,7 +120,7 @@ class HomeController extends Controller
         $new_pesanan->nomor_phone = $validatedData['nomor_phone'];
         $new_pesanan->total_harga = $validatedData['total_harga'];
         $new_pesanan->metode = 'qris';
-        $new_pesanan->status = 'proses';
+        $new_pesanan->status = 'batal';
         $new_pesanan->save();
 
         foreach ($carts as $index => $cart) {

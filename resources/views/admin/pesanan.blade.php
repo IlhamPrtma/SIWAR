@@ -22,9 +22,9 @@
                     <label for="filterStatus">Filter Status</label>
                     <select id="filterStatus" class="form-select mb-3">
                         <option value="">Semua</option>
+                        <option value="Belum Bayar">Belum Bayar</option>
                         <option value="proses">Proses</option>
                         <option value="sukses">Sukses</option>
-                        <option value="batal">Batal</option>
                     </select>
                 </div>
             </div>    
@@ -57,7 +57,9 @@
                                 <td>{{ "Rp " . number_format($pesanan->total_harga, 0, ".", ".") }}</td>
                                 <td>
                                     <h5>
-                                        <span class="badge text-white bg-{{$pesanan->status == 'proses' ? 'warning' : ($pesanan->status == 'sukses' ? 'success' : 'danger')}}">{{ Str::of($pesanan->status)->apa()}}</span>
+                                        <span class="badge text-white bg-{{ $pesanan->status == 'proses' ? 'warning' : ($pesanan->status == 'sukses' ? 'success' : 'danger') }}">
+                                            {{ $pesanan->status == 'batal' ? 'Belum Bayar' : Str::of($pesanan->status)->apa() }}
+                                        </span>
                                     </h5>
                                 </td>
                                 <td>
@@ -78,14 +80,17 @@
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label for="nama_pemesan" class="form-label">Nama Pemesan|Meja</label>
-                                                                <input type="text" class="form-control" id="nama_pemesan" name="nama_pemesan" value="{{$pesanan->nama_pemesan.' ( Meja No.'.$pesanan->no_meja.' )'}}" required>
+                                                                <input type="text" class="form-control" id="nama_pemesan" name="nama_pemesan" value="{{$pesanan->nama_pemesan.' ( Meja No.'.$pesanan->no_meja.' )'}}" readOnly>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="status" class="form-label">Status Pesanan</label>
                                                                 <select class="form-select" aria-label="Default select example" name="status" required>
-                                                                    <option selected>Open this select menu</option>
-                                                                    @foreach (['proses','batal','sukses'] as $status)
-                                                                    <option value="{{$status}}" @if ($pesanan->status === $status) selected @endif >{{Str::of($status)->apa()}}</option>
+                                                                    @foreach ([ 'batal', 'proses', 'sukses'] as $status)
+                                                                        @if ($status === 'batal')
+                                                                            <option value="{{ $status }}" @if ($pesanan->status === $status) selected @endif>Belum Bayar</option>
+                                                                        @else
+                                                                            <option value="{{ $status }}" @if ($pesanan->status === $status) selected @endif>{{ Str::of($status)->apa() }}</option>
+                                                                        @endif
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -99,6 +104,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <form id="delete_pesanan_{{ $pesanan->id }}"
+                                            action="{{ route('admin.delete.pesanan', ['id' => $pesanan->id]) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" onclick="showAlert({{ $pesanan->id }}, '{{ $pesanan->nama_pemesan }}')" class="btn btn-danger">Hapus</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -125,6 +137,30 @@
     <script src="{{ asset("admin/vendor/datatables/dataTables.bootstrap4.min.js") }}"></script>
     <!-- Page level custom scripts -->
     <script src="{{ asset("admin/js/demo/datatables-demo.js") }}"></script>
+    @if (session()->has("delete-pesanan-successfully"))
+        @php
+            $message = session()->get("delete-pesanan-successfully"); // Mengambil pesan dari sesi
+        @endphp
+        <script>
+            Swal.fire({
+                title: "Hapus Pesanan Sukses!",
+                text: "{{ addslashes($message) }}",
+                icon: "success"
+            });
+        </script>
+    @endif
+    @if (session()->has("update-pesanan-successfully"))
+        @php
+            $message = session()->get("update-pesanan-successfully"); // Mengambil pesan dari sesi
+        @endphp
+        <script>
+            Swal.fire({
+                title: "Kelola Pesanan Sukses!",
+                text: "{{ addslashes($message) }}",
+                icon: "success"
+            });
+        </script>
+    @endif
     <script>
         $(document).ready(function () {
             var table = $('#dataTable').DataTable(); // Inisialisasi DataTable
@@ -138,6 +174,23 @@
                 }
             });
         });
+    </script>
+    <script>
+        function showAlert(id, namaPemesan) {
+            Swal.fire({
+                title: `Anda yakin ingin menghapus pesanan ${namaPemesan}?`,
+                text: "Data yang dihapus tidak bisa dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText: "Batal",
+                confirmButtonText: "Ya, hapus",
+                dangerMode: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete_pesanan_${id}`).submit();
+                }
+            });
+        }
     </script>
     <script>
         // Script untuk mengendalikan sidebar

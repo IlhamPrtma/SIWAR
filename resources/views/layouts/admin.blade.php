@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+    <!--Icon-->
+    <link href="{{ asset('storage/icon.png') }}" rel="icon">
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -44,7 +47,103 @@
                             </a>
                         </li>
                     </ul>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Akun Pengguna</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="userProfile">
+                                        <!-- Ini tempat untuk menampilkan informasi pengguna -->
+                                    </div>
+                                </div>
+                                <!--<div class="modal-footer">-->
+                                <!--    <button type="button" class="btn btn-success" id="editUserButton">Edit</button>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Edit User -->
+                    <div class="modal fade" id="editUserModal-{{ Auth::id() }}" tabindex="-1" aria-labelledby="editUserModal-{{ Auth::id() }}" aria-hidden="true">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Akun</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('superadmin.update.user', ['user_id' => Auth::id()]) }}" method="POST" enctype="multipart/form-data">
+                                    @method('PUT')
+                                    @csrf
+                                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                                        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                                        <div class="mb-3">
+                                            <label for="nama" class="form-label">Nama</label>
+                                            <input type="text" class="form-control" id="nama" name="nama" value="{{ Auth::user()->nama }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="{{ Auth::user()->username }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">New Password</label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+                                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                                    <<i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="8" required>
+                                                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label"><h6>Role</h6></label>
+                                            <select class="form-select" id="role" name="role" aria-label="Role Selection" required>
+                                                @if (Auth::user()->hasRole('admin'))
+                                                    <option value="admin" {{ Auth::user()->hasRole('admin') ? 'selected' : '' }}>Admin</option>
+                                                @endif
+                                                @if (Auth::user()->hasRole('super admin'))
+                                                    <option value="super admin" {{ Auth::user()->hasRole('super admin') ? 'selected' : '' }}>Super Admin</option>
+                                                @endif
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="foto_profil" class="form-label">Gambar</label>
+                                            <input class="form-control" type="file" id="foto_profil" name="foto_profil" accept="image/*">
+                                            @if (Auth::user()->profile_photo)
+                                                <p>Gambar saat ini:</p>
+                                                <img src="{{ asset("/storage/" . Auth::user()->profile_photo) }}" alt="Menu Image" style="max-width: 100px;">
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Perbarui Data</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </nav>
+                
                 <div class="container-fluid pt-4 bg-gray-primary">
                     @yield('content')
                 </div>
@@ -70,7 +169,37 @@
     <script src="{{asset('admin/js/demo/chart-pie-demo.js')}}"></script>
     <script src="{{asset('admin/js/demo/chart-bar-demo.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script>
+    // Ketika navbar di-klik, tampilkan modal dan isi informasi pengguna
+    document.getElementById('userDropdown').addEventListener('click', function() {
+        // Simpan informasi pengguna dalam variabel
+        var profilePhoto = "{{ asset('storage/' . Auth::user()->profile_photo) }}";
+        var nama = "{{ Auth::user()->nama }}";
+        var username = "{{ Auth::user()->username }}";
+        var email = "{{ Auth::user()->email }}";
+
+        // Isi modal dengan informasi pengguna
+        document.getElementById('userProfile').innerHTML = `
+            <div class="d-flex align-items-center">
+                <img src="${profilePhoto}" class="img-profile rounded-circle mx-2" style="width: 115px; height: 115px; border: 2px solid #ccc;">
+                <div class="d-flex flex-column">
+                    <p><strong>Nama:</strong> ${nama}</p>
+                    <p><strong>Username:</strong> ${username}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                </div>
+            </div>
+        `;
+        // Tampilkan modal
+        $('#userModal').modal('show');
+    });
+
+    // Tambahkan event listener untuk tombol "Edit" di modal userModal
+    document.getElementById('editUserButton').addEventListener('click', function() {
+        var userId = "{{ Auth::id() }}"; 
+        $('#editUserModal-' + userId).modal('show');
+        $('#userModal').modal('hide');
+    });
+    </script>
     @stack('scripts')
 </body>
 </html>

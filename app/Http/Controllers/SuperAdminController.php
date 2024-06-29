@@ -9,6 +9,8 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 class SuperAdminController extends Controller
@@ -33,7 +35,12 @@ class SuperAdminController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('public/menu', $filename);
             $publicFilePath = str_replace('public/', '', $filePath);
+            
+            $publicStoragePath = 'storage/menu/' . $filename;
+            $storedFilePath = storage_path('app/' . $filePath);
+            copy($storedFilePath, public_path($publicStoragePath));
         }
+        
         $newMenu = new Menu();
         $newMenu->nama = $validatedData['nama'];
         $newMenu->id_kategori = $validatedData['id_kategori'];
@@ -44,14 +51,68 @@ class SuperAdminController extends Controller
         Session::flash('update-menu-successfully', 'Menu telah berhasil ditambahkan!');
         return redirect()->back();        
     }
+    public function updateMenu(Request $request, $id_menu){
+        $rules = [
+            'nama' => 'required|max:255',
+            'id_kategori' => 'required|numeric',
+            'harga' => 'required|numeric',  
+            'ketersediaan' => 'required|in:1,0',  
+        ];
+        $validatedData = $request->validate($rules);
+        $updateData = [
+            'nama' => $validatedData['nama'],
+            'id_kategori' => $validatedData['id_kategori'],
+            'harga' => $validatedData['harga'],
+            'ketersediaan' => $validatedData['ketersediaan'],
+        ];
+        if ($request->hasFile('gambar')) {
+            $imageRules = [
+                'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:2048'  
+            ];
+            $request->validate($imageRules);
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('public/menu', $filename);
+            $publicFilePath = str_replace('public/', '', $filePath);
+            $updateData['gambar'] = $publicFilePath;
+            
+            $publicStoragePath = 'storage/menu/' . $filename;
+            $storedFilePath = storage_path('app/' . $filePath);
+            copy($storedFilePath, public_path($publicStoragePath));
+
+        }
+        Menu::where('id', $id_menu)->update($updateData);
+        Session::flash('update-menu-successfully', 'Data Menu Berhasil Berubah!');
+        return redirect()->back();
+    }
 
     public function destroyMenu($id_menu){
         $menu = Menu::find($id_menu);
         if ($menu) {
+            // Hapus gambar dari public/storage/menu/
+            if ($menu->gambar) {
+                $publicFilePath = public_path('storage/menu/' . $menu->gambar);
+                if (file_exists($publicFilePath)) {
+                    unlink($publicFilePath);
+                }
+            }
+    
+            // Hapus gambar dari storage/app/public/menu/
+            if ($menu->gambar) {
+                $storedFilePath = storage_path('app/public/menu/' . $menu->gambar);
+                if (file_exists($storedFilePath)) {
+                    unlink($storedFilePath);
+                }
+            }
+    
+            
             $menu->delete();
+            Session::flash('menu-deleted-successfully', 'Menu telah berhasil dihapus!');
         }
         return redirect()->back();
     }
+
+
 
     public function laporan()
     {
@@ -114,6 +175,10 @@ class SuperAdminController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('public/photo-profile', $filename);
             $publicFilePath = str_replace('public/', '', $filePath);
+            
+            $publicStoragePath = 'storage/photo-profile/' . $filename;
+            $storedFilePath = storage_path('app/' . $filePath);
+            copy($storedFilePath, public_path($publicStoragePath));
         }
 
         if($validatedData['password'] === $validatedData['confirm_password']){
@@ -127,11 +192,8 @@ class SuperAdminController extends Controller
             $new_user->assignRole($validatedData['role']);
             Session::flash('add-account-successfully', 'Akun telah berhasil ditambahkan!');
         }
-
+        Session::flash('update-account-failed', 'Akun gagal ditambahkan!');
         return redirect()->back();
-
-
-        
     }
 
     public function updateAccount(Request $request, $user_id){
@@ -150,6 +212,10 @@ class SuperAdminController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('public/photo-profile', $filename);
             $publicFilePath = str_replace('public/', '', $filePath);
+            
+            $publicStoragePath = 'storage/photo-profile/' . $filename;
+            $storedFilePath = storage_path('app/' . $filePath);
+            copy($storedFilePath, public_path($publicStoragePath));
         }
 
         $user = User::findOrFail($user_id);
@@ -168,14 +234,15 @@ class SuperAdminController extends Controller
             return redirect()->back();
         }
 
-        Session::flash('update-account-failed', 'Akun Gagal diubah!');
+        Session::flash('update-account-failed', 'Akun gagal diubah!');
         return redirect()->back();
     }
-
+    
     public function destroyAccount($id_account){
         $account = User::findOrFail($id_account);
         if ($account) {
             $account->delete();
+            Session::flash('account-deleted-successfully', 'Akun telah berhasil dihapus!');
         }
         return redirect()->back();
     }

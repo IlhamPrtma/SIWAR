@@ -53,7 +53,7 @@
                                     <div class="mb-3">
                                         <label for="kategori" class="form-label">Kategori</label>
                                         <select class="form-select" name="id_kategori" aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
+                                            
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->nama }}</option>
                                             @endforeach
@@ -66,13 +66,13 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="harga" class="form-label">Harga</label>
-                                        <input type="number" class="form-control" name="harga" required>
+                                        <input type="text" class="form-control" name="harga" minlength="4" maxlength="6" pattern="[0-9]{4,6}" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="ketersediaan" class="form-label">Ketersediaan</label>
                                         <select class="form-select" name="ketersediaan" aria-label="Default select example"
                                             required>
-                                            <option selected>Pilih status ketersediaan</option>
+                                            
                                             <option value="1">Tersedia</option>
                                             <option value="0">Kosong</option>
                                         </select>
@@ -139,7 +139,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <form method="post"
-                                                            action="{{ route("admin.update.menu", ["id_menu" => $menu->id]) }}"
+                                                            action="{{ route("superadmin.update.menu", ["id_menu" => $menu->id]) }}"
                                                             enctype="multipart/form-data">
                                                             @method("put")
                                                             @csrf
@@ -172,7 +172,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="harga" class="form-label">Harga</label>
-                                                                <input type="number" class="form-control" name="harga"
+                                                                <input type="text" class="form-control" name="harga" minlength="4" maxlength="6" pattern="[0-9]{4,6}" 
                                                                     value="{{ $menu->harga }}">
                                                             </div>
                                                             <div class="mb-3">
@@ -259,6 +259,18 @@
         <script>
             Swal.fire({
                 title: "Kelola Menu Sukses!",
+                text: "{{ addslashes($message) }}",
+                icon: "success"
+            });
+        </script>
+    @endif
+    @if (session()->has("menu-deleted-successfully"))
+        @php
+            $message = session()->get("menu-deleted-successfully"); // Mengambil pesan dari sesi
+        @endphp
+        <script>
+            Swal.fire({
+                title: "Hapus Menu Sukses!",
                 text: "{{ addslashes($message) }}",
                 icon: "success"
             });

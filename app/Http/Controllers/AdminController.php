@@ -90,13 +90,13 @@ class AdminController extends Controller
     public function updateMenu(Request $request, $id_menu){
         $rules = [
             'nama' => 'required|max:255',
-            'harga' => 'required|numeric',  
+            
             'ketersediaan' => 'required|in:1,0',  
         ];
         $validatedData = $request->validate($rules);
         $updateData = [
             'nama' => $validatedData['nama'],
-            'harga' => $validatedData['harga'],
+            
             'ketersediaan' => $validatedData['ketersediaan'],
         ];
         if ($request->hasFile('gambar')) {
@@ -109,6 +109,10 @@ class AdminController extends Controller
             $filePath = $file->storeAs('public/menu', $filename);
             $publicFilePath = str_replace('public/', '', $filePath);
             $updateData['gambar'] = $publicFilePath;
+            
+            $publicStoragePath = 'storage/menu/' . $filename;
+            $storedFilePath = storage_path('app/' . $filePath);
+            copy($storedFilePath, public_path($publicStoragePath));
 
         }
         Menu::where('id', $id_menu)->update($updateData);
@@ -117,16 +121,42 @@ class AdminController extends Controller
     }
 
 
-    public function updateStatusPesanan(Request $request, $pesanan_id){
-        
-        $validatedData = $request->validate([
-            'nama_pemesan' => 'required|string',
-            'status' => 'required|in:proses,sukses,batal'
-            
-        ]);
-        $pesanan = Pesanan::findOrFail($pesanan_id);
-        $pesanan->status = $validatedData['status'];
-        $pesanan->save();
+    public function updateStatusPesanan(Request $request, $pesanan_id)
+{
+    $validatedData = $request->validate([
+        'nama_pemesan' => 'required|string',
+        'status' => 'required|in:proses,sukses,batal'
+    ]);
+
+    // Ambil pesanan berdasarkan $pesanan_id
+    $pesanan = Pesanan::findOrFail($pesanan_id);
+
+    // Update status pesanan
+    $pesanan->status = $validatedData['status'];
+    $pesanan->save();
+
+    // Ambil nama pemesan dari data yang divalidasi
+    $nama_pemesan = $validatedData['nama_pemesan'];
+
+    // Buat pesan flash dengan nama pemesan yang berhasil diubah statusnya
+    Session::flash('update-pesanan-successfully', 'Status Pesanan ' . $nama_pemesan . ' Berhasil Diubah!');
+
+    return redirect()->back();
+}
+
+    public function destroyPesanan($id){
+        // Temukan pesanan berdasarkan ID bersama dengan detail pesanannya
+        $pesanan = Pesanan::with('detailPesanan')->find($id);
+
+        if ($pesanan) {
+            // Hapus detail pesanan terlebih dahulu
+            $pesanan->detailPesanan()->delete();
+
+            // Hapus pesanan itu sendiri
+            $pesanan->delete();
+        }
+
+        Session::flash('delete-pesanan-successfully', 'Data Pesanan Berhasil Dihapus!');
         return redirect()->back();
     }
 }

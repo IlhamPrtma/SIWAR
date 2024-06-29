@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ asset('storage/icon.png') }}" rel="icon">
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -17,7 +17,6 @@
 
     <!-- Libraries Stylesheet -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
     <link href="{{asset('lib/animate/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
     <link href="{{asset('lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
@@ -30,7 +29,6 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <!-- Template Stylesheet -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -38,7 +36,7 @@
 </head>
 
 <body >
-    <div class="container-fluid bg-gray-light">
+    <div class="col-md-12 bg-gray-light">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -48,11 +46,10 @@
         <!-- Spinner End -->
 
         <!-- Navbar & Hero Start -->
-        <div class="container-fluid p-0">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-                <a href="" class="navbar-brand p-0">
-                    <h1 class="text-primary m-0" style="font-family: 'Poppins'">Warmindo Aroma</h1>
-                    
+        <nav class=" navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container" >
+                <a href="" class="navbar-brand" >
+                    <h2 class="text-primary" style="font-family: 'Poppins' font-size: 1.5rem;">Warmindo Aroma</h1>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
@@ -64,30 +61,33 @@
                         <a href="{{route('pelanggan.cart')}}" class="nav-item nav-link active {{ request()->routeIs('pelanggan.cart') ?'fw-bolder' : ''}}">Keranjang</a>
                     </div>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
         <!-- Navbar & Hero End -->
         
         @yield('content')
 
         <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <footer class="container-fluid bg-dark text-light mt-5">
             <div class="container py-5">
-                <div class="row g-5">
-                    <div class="col-lg-6 col-md-6">
-                        <h4 class="text-start text-primary fw-normal mb-4">Warmindo Aroma</h4>
-                        <p class="text-wrap" style="width: 25rem">Kunjungi kami untuk menikmati berbagai pilihan menu autentik yang akan memanjakan lidah Anda. Warmindo Aroma menyediakan hidangan nusantara dengan cita rasa yang khas dan suasana yang nyaman untuk dinikmati bersama keluarga dan teman.</p>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4 class="text-start text-primary mb-4">Warmindo Aroma</h4>
+                        <p class="text-start" >Kunjungi kami untuk menikmati berbagai pilihan menu autentik yang akan memanjakan lidah Anda. Warmindo Aroma menyediakan hidangan nusantara dengan cita rasa yang khas dan suasana yang nyaman untuk dinikmati bersama keluarga dan teman.</p>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <h4 class="text-start text-primary fw-bold mb-4">Kontak Kami</h4>
-                        <p class="mb-2 text-nowrap"><i class="fa fa-map-marker-alt me-3"></i>Gondang Barat II RT 08 RW 01, Kecamatan Tembalang, Kota Semarang</p>
-                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+62 813 945 06412</p>
-                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>warmindoaroma@gmail.com</p>
+                    <div class="col-lg-6">
+                        <h4 class="text-start text-primary mb-4">Kontak Kami</h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-geo-alt-fill me-3"></i>Gondang Barat II RT 08 RW 01, Kecamatan Tembalang, Kota Semarang</li>
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-3"></i>+62 813 945 06412</li>
+                            <li class="mb-2"><i class="bi bi-envelope-fill me-3"></i>warmindoaroma@gmail.com</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
+        </footer>
         <!-- Footer End -->
+
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle"><i class="bi bi-arrow-up"></i></a>
@@ -95,7 +95,7 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="lib/wow/wow.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
@@ -105,7 +105,6 @@
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

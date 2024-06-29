@@ -1,6 +1,8 @@
 @extends("layouts.admin")
 @push("styles")
     <link href="{{ asset("admin/vendor/datatables/dataTables.bootstrap4.min.css") }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    
 @endpush
 @section("content")
     <!-- DataTales Example -->
@@ -14,7 +16,7 @@
         </div>
         <div class="card-body">
             <div class="my-3">
-                <button type="button" class="btn btn-primary text-orange-500" style="background-color: black"
+                <button type="button" class="btn btn-secondary text-orange-500" style="background-color: black"
                     data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <img src="{{ asset("svg/plus-people.svg") }}" class="mr-3">
                     <span>Tambah</span>
@@ -44,18 +46,23 @@
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
+                                    <!-- Password Field -->
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Password</label>
                                         <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+                                        
                                     </div>
+                                    
+                                    <!-- Confirm Password Field -->
                                     <div class="mb-3">
                                         <label for="confirm_password" class="form-label">Confirm Password</label>
                                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="8" required>
+                                       
                                     </div>
+
                                     <div class="mb-3">
                                         <label for="role" class="form-label"><h6>Role</h6></label>
                                         <select class="form-select" id="role" name="role" aria-label="Default select example" required>
-                                            <option selected>Pilih role</option>
                                             <option value="admin">Admin</option>
                                             <option value="super admin">Super Admin</option>
                                           </select>
@@ -120,17 +127,23 @@
                                                                 <label for="email" class="form-label">Email</label>
                                                                 <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}" required>
                                                             </div>
+                                                            <!-- Password Field -->
                                                             <div class="mb-3">
-                                                                <label for="password" class="form-label">Password</label>
+                                                                <label for="password" class="form-label">New Password</label>
                                                                 <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+                                                                
                                                             </div>
+                                                            
+                                                            <!-- Confirm Password Field -->
                                                             <div class="mb-3">
                                                                 <label for="confirm_password" class="form-label">Confirm Password</label>
                                                                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="8" required>
+                                                                
                                                             </div>
+
                                                             <div class="mb-3">
                                                                 <label for="role" class="form-label"><h6>Role</h6></label>
-                                                                <select class="form-select" id="role" name="role" aria-label="Role Selection" required>
+                                                                <select class="form-select" id="role" name="role" aria-label="Role Selection" required >
                                                                     <option value="admin" {{ $user->roles->first()->name === 'admin' ? 'selected' : '' }}>Admin</option>
                                                                     <option value="super admin" {{ $user->roles->first()->name === 'super admin' ? 'selected' : '' }}>Super Admin</option>
                                                                 </select>                                                                
@@ -228,6 +241,49 @@
             });
         </script>
     @endif
+    
+    @if (session()->has("account-deleted-successfully"))
+        @php
+            $message = session()->get("account-deleted-successfully"); // Mengambil pesan dari sesi
+        @endphp
+        <script>
+            Swal.fire({
+                title: "Hapus Akun Sukses!",
+                text: "{{ addslashes($message) }}",
+                icon: "success"
+            });
+        </script>
+    @endif
+   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function togglePasswordVisibility(inputId, buttonId) {
+            var input = document.getElementById(inputId);
+            var button = document.getElementById(buttonId);
+            var icon = button.querySelector('i');
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        var toggles = [
+            {inputId: "password", buttonId: "togglePassword"},
+            {inputId: "confirm_password", buttonId: "toggleConfirmPassword"}
+        ];
+
+        toggles.forEach(function(toggle) {
+            document.getElementById(toggle.buttonId).addEventListener("click", function() {
+                togglePasswordVisibility(toggle.inputId, toggle.buttonId);
+            });
+        });
+    });
+</script>
 
     <script> 
         function deleteAccount(data){
@@ -260,4 +316,7 @@
             });
         });
     </script>
+    
+
+    
 @endpush

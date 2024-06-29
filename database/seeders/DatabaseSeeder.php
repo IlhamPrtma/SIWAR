@@ -76,21 +76,21 @@ class DatabaseSeeder extends Seeder
 
         // add account data
         $superadmin = User::create([
-            'nama' => 'Ahmad',
-            'email' => 'ahmad456@gmail.com',
-            'username' => 'ahmad456',
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'username' => 'sadmin1123',
             'password' => bcrypt('password'),
-            'profile_photo' => '/user-1.png'
+            'profile_photo' => 'photo-profile/1715432561_man3.jpg'
         ]);
     
         $superadmin->assignRole('super admin');
     
         $admin = User::create([
-            'nama' => 'Hasan',
-            'email' => 'hasan123@gmail.com',
-            'username' => 'hasan123',
+            'nama' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'username' => 'admin1123',
             'password' => bcrypt('password'),
-            'profile_photo' => '/user-1.png'
+            'profile_photo' => 'photo-profile/1715432656_man-taking-selfie.jpg'
         ]);
     
         $admin->assignRole('admin');

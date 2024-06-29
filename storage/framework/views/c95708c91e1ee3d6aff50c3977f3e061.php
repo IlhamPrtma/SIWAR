@@ -44,7 +44,87 @@
                             </a>
                         </li>
                     </ul>
+
+                    <!-- Modal -->
+                    
+                    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Akun Pengguna</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="userProfile">
+                                        <!-- Ini tempat untuk menampilkan informasi pengguna -->
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" id="editUserButton">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Edit User -->
+                    <div class="modal fade" id="editUserModal-<?php echo e(Auth::id()); ?>" tabindex="-1" aria-labelledby="editUserModalLabel-<?php echo e(Auth::id()); ?>" aria-hidden="true">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Akun</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="<?php echo e(route('superadmin.update.account', ['user_id' => Auth::id()])); ?>" method="POST" enctype="multipart/form-data">
+    <?php echo method_field('PUT'); ?>
+    <?php echo csrf_field(); ?>
+    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" name="nama" value="<?php echo e(Auth::user()->nama); ?>" required>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="<?php echo e(Auth::user()->username); ?>" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="<?php echo e(Auth::user()->email); ?>" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="8" required>
+        </div>
+        <div class="mb-3">
+            <label for="role" class="form-label"><h6>Role</h6></label>
+            <select class="form-select" id="role" name="role" aria-label="Role Selection" required disabled>
+                <option value="admin" <?php echo e(Auth::user()->roles->first()->name === 'admin' ? 'selected' : ''); ?>>Admin</option>
+                <option value="super admin" <?php echo e(Auth::user()->roles->first()->name === 'super admin' ? 'selected' : ''); ?>>Super Admin</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="foto_profil" class="form-label">Gambar</label>
+            <input class="form-control" type="file" id="foto_profil" name="foto_profil" accept="image/*">
+            <?php if(Auth::user()->profile_photo): ?>
+                <p>Gambar saat ini:</p>
+                <img src="<?php echo e(asset("/storage/" . Auth::user()->profile_photo)); ?>" alt="Menu Image" style="max-width: 100px;">
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Perbarui Data</button>
+    </div>
+</form>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </nav>
+                
                 <div class="container-fluid pt-4 bg-gray-primary">
                     <?php echo $__env->yieldContent('content'); ?>
                 </div>
@@ -70,7 +150,51 @@
     <script src="<?php echo e(asset('admin/js/demo/chart-pie-demo.js')); ?>"></script>
     <script src="<?php echo e(asset('admin/js/demo/chart-bar-demo.js')); ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script>
+    // Ketika navbar di-klik, tampilkan modal dan isi informasi pengguna
+    document.getElementById('userDropdown').addEventListener('click', function() {
+        // Simpan informasi pengguna dalam variabel
+        var profilePhoto = "<?php echo e(asset('storage/' . Auth::user()->profile_photo)); ?>";
+        var nama = "<?php echo e(Auth::user()->nama); ?>";
+        var username = "<?php echo e(Auth::user()->username); ?>";
+        var email = "<?php echo e(Auth::user()->email); ?>";
+
+        // Isi modal dengan informasi pengguna
+        document.getElementById('userProfile').innerHTML = `
+            <div class="d-flex align-items-center">
+                <img src="${profilePhoto}" class="img-profile rounded-circle mx-2" style="width: 115px; height: 115px; border: 2px solid #ccc;">
+                <div class="d-flex flex-column">
+                    <p><strong>Nama:</strong> ${nama}</p>
+                    <p><strong>Username:</strong> ${username}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                </div>
+            </div>
+        `;
+        // Tampilkan modal
+        $('#userModal').modal('show');
+    });
+
+    // Tambahkan event listener untuk tombol "Edit" di modal userModal
+    document.getElementById('editUserButton').addEventListener('click', function() {
+        var userId = "<?php echo e(Auth::id()); ?>"; 
+        $('#editUserModal-' + userId).modal('show');
+        $('#userModal').modal('hide');
+    });
+</script>
+    <script src="<?php echo e(asset("admin/js/demo/datatables-demo.js")); ?>"></script>
+    <?php if(session()->has("update-account-successfully")): ?>
+        <?php
+            $message = session()->get("update-account-successfully"); // Mengambil pesan dari sesi
+        ?>
+        <script>
+            Swal.fire({
+                title: "Kelola Akun Sukses!",
+                text: "<?php echo e(addslashes($message)); ?>",
+                icon: "success"
+            });
+        </script>
+    <?php endif; ?>
+
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\order-food-app-main\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

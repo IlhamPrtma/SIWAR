@@ -68,7 +68,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="kuantitas" class="form-label">Kuantitas</label>
-                                                                <input type="number" min="1" class="form-control" name="kuantitas" required>
+                                                                <input type="number" min="1" max="10"class="form-control" name="kuantitas" required>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">

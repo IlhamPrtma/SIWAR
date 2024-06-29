@@ -69,13 +69,12 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="nomor_meja" min = "1" class="form-label">Nomor Meja</label>
-                                    <input type="number" min="1" class="form-control" name="nomor_meja"
+                                    <input type="number" min="1" max="12" class="form-control" name="nomor_meja"
                                         placeholder="XX" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="nomor_phone" class="form-label">Nomor Handphone</label>
-                                    <input type="number" class="form-control" name="nomor_phone" placeholder="0817267XXXX" 
-                                        minlength="10" maxlength="12" required>
+                                    <input type="text" class="form-control" name="nomor_phone" id="nomor_phone" placeholder="0817267XXXX" pattern="08[0-9]{8,11}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="nama_pemesan" class="form-label">Nama Pemesan</label>
@@ -84,7 +83,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-success w-100 rounded-3" 
                                     <?php if(session()->get('totalPrice') == 0): ?> disabled <?php endif; ?>>
-                                    Bayar Sekarang
+                                    Pesan Sekarang
                                 </button>
                             </form>
                         </div>
@@ -138,7 +137,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <span class="text-danger">*Silahkan dapat discreenshoot untuk bukti invoicenya</span>
+                    <span class="text-danger">*Silahkan dapat discreenshoot untuk bukti invoicenya dan konfirmasi pembayaran melalui KASIR</span>
                 </div>
             </div>
         </div>
@@ -154,7 +153,7 @@
         Swal.fire({
             title: "Order Sukses",
 
-            text: "Yee, pemesananmu sedang diproses, tunggu yaa..",
+            text: "Silahkan lanjutkan proses pembayaran melalui kayrawan",
             icon: "success",
             showDenyButton: true,
             reverseButtons: true,

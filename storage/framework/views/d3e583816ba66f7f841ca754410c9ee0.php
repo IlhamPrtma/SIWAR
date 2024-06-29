@@ -111,8 +111,12 @@
                                 <td style="font-size: 14px"><?php echo e(\Carbon\Carbon::parse($pesanan->created_at)->addHours(7)->isoFormat('D MMMM YYYY HH:mm').' WIB'); ?></td>
                                 <td>
                                     <h5>
-                                        <span class="badge text-white bg-<?php echo e($pesanan->pesanan->status == 'proses' ? 'warning' : ($pesanan->pesanan->status == 'sukses' ? 'success' : 'danger')); ?>"><?php echo e(Str::of($pesanan->pesanan->status)->apa()); ?></span>
+                                        <span class="badge text-white bg-<?php echo e($pesanan->pesanan->status == 'proses' ? 'warning' : ($pesanan->pesanan->status == 'sukses' ? 'success' : 'danger')); ?>">
+                                            <?php echo e($pesanan->pesanan->status == 'batal' ? 'Belum Bayar' : Str::of($pesanan->pesanan->status)->apa()); ?>
+
+                                        </span>
                                     </h5>
+
                                 </td>
                             </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

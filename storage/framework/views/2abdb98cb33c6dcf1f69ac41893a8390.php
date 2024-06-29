@@ -76,7 +76,7 @@
                 <div class="row g-5">
                     <div class="col-lg-6 col-md-6">
                         <h4 class="text-start text-primary fw-normal mb-4">Warmindo Aroma</h4>
-                        <p class="text-wrap" style="width: 25rem">Kunjungi kami untuk menikmati berbagai pilihan menu autentik yang akan memanjakan lidah Anda. Warmindo Aroma menyediakan hidangan nusantara dengan cita rasa yang khas dan suasana yang nyaman untuk dinikmati bersama keluarga dan teman.</p>
+                        <p class="text-wrap">Kunjungi kami untuk menikmati berbagai pilihan menu autentik yang akan memanjakan lidah Anda. Warmindo Aroma menyediakan hidangan nusantara dengan cita rasa yang khas dan suasana yang nyaman untuk dinikmati bersama keluarga dan teman.</p>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <h4 class="text-start text-primary fw-bold mb-4">Kontak Kami</h4>

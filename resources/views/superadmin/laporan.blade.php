@@ -26,7 +26,7 @@
                 <input type="date" class="form-control" id="end_date" name="end_date" placeholder="name@example.com" required>
             </div>
         </div>                
-        <button type="submit" class="btn btn-primary text-orange-500" style="background-color: black">
+        <button type="submit" class="btn btn-secondary text-orange-500" style="background-color: black">
             <span>Print</span>
         </button>
     </form>
